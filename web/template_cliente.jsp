@@ -242,7 +242,7 @@
                         <a class="nav-link active" aria-current="page" href="#.jsp"><img src="img/10.png">Compras</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="contactanos.jsp.jsp">Contactanos</a>
+                        <a class="nav-link active" aria-current="page" href="contactanos.jsp">Contactanos</a>
                     </li>
                 </ul>
                 <form class="d-flex" action="buscarProductos.jsp" >

@@ -16,7 +16,7 @@ public class conexion {
         private final String urlconexion = String.format("jdbc:mysql://localhost:3306/newdb");
 
     private final String user = "root";
-    private final String password = "danigero";
+    private final String password = "root";
     private final String jdbc = "com.mysql.cj.jdbc.Driver";
     public Connection conectar_db;
 
