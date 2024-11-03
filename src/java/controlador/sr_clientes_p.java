@@ -72,4 +72,8 @@ public class sr_clientes_p extends HttpServlet {
     public String getServletInfo() {
         return "Servlet que maneja las operaciones de clientes.";
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> f3587edba80a5271803db89211bb6f40fc19ce40

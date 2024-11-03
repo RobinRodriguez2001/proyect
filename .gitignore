@@ -1,2 +1,7 @@
 touch build/.gitkeep 
+<<<<<<< HEAD
 /dist/
+=======
+/nbproject/private/
+/build/
+>>>>>>> f3587edba80a5271803db89211bb6f40fc19ce40

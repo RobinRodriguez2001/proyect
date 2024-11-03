@@ -31,7 +31,11 @@
         try {
             // Conectar a la base de datos
             Class.forName("com.mysql.cj.jdbc.Driver");
+<<<<<<< HEAD
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/newdb", "root", "danigero");
+=======
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/updated", "root", "Israel_14");
+>>>>>>> f3587edba80a5271803db89211bb6f40fc19ce40
 
             // Preparar consulta para buscar usuario
             String sql = "SELECT id, password, attempts, lock_time, mec, idCliente FROM users WHERE username = ?";
@@ -361,4 +365,8 @@
 </div>
     
 
+<<<<<<< HEAD
 </header>
+=======
+</header>
+>>>>>>> f3587edba80a5271803db89211bb6f40fc19ce40

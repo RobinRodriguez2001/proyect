@@ -153,4 +153,8 @@
 </div>
 
 
+<<<<<<< HEAD
 <%@ include file="pie_cliente.jsp" %>
+=======
+<%@ include file="pie_cliente.jsp" %>
+>>>>>>> f3587edba80a5271803db89211bb6f40fc19ce40

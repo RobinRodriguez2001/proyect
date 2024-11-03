@@ -1,4 +1,7 @@
+<<<<<<< HEAD
     
+=======
+>>>>>>> f3587edba80a5271803db89211bb6f40fc19ce40
 <footer>
     <div class="text-center p-3 bg-secondary">
         © 2024 Todos los derechos reservados. <img src="img/as.png" alt="Logo" style="width: 80px; height: auto;">
