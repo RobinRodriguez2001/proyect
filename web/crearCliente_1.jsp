@@ -94,7 +94,7 @@
 
                         try {
                             Class.forName("com.mysql.jdbc.Driver");
-                            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/updated", "root", "Israel_14");
+                            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/newdb", "root", "danigero");
 
                             String sql = "SELECT id, password, attempts, lock_time, mec, idEmpleado FROM users WHERE username = ?";
                             stmt = conn.prepareStatement(sql);
@@ -126,9 +126,9 @@
                                         if (role.equalsIgnoreCase("admin")) {
                                             response.sendRedirect("admin/Administrador/Productos.jsp");
                                         } else if (role.equalsIgnoreCase("empleado")) {
-                                            response.sendRedirect("admin/Empleados/Productos.jsp");
+                                            response.sendRedirect("admin/Empleado/admin.jsp");
                                         } else if (role.equalsIgnoreCase("cliente")) {
-                                            response.sendRedirect("index.jsp");
+                                            response.sendRedirect("admin/cliente.jsp");
                                         }
 
                                         // Resetear intentos

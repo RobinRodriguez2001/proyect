@@ -1,1 +1,3 @@
 touch build/.gitkeep 
+/nbproject/private/
+/build/

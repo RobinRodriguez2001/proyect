@@ -1,5 +1,7 @@
 <footer>
-    <p>&copy; 2024 Tu Empresa de Cómputo. Todos los derechos reservados.</p>
+    <div class="text-center p-3 bg-secondary">
+        © 2024 Todos los derechos reservados. <img src="img/as.png" alt="Logo" style="width: 80px; height: auto;">
+    </div>
 </footer>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

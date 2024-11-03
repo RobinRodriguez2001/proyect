@@ -9,13 +9,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import modelo.Clientes_adm;
 
 @MultipartConfig
-public class sr_clientes_adm extends HttpServlet {
+public class sr_clientes_p extends HttpServlet {
 
     Clientes_adm cliente;
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+
 
         try {
             // Recuperar parámetros
@@ -30,30 +31,20 @@ public class sr_clientes_adm extends HttpServlet {
             // Crear objeto Clientes_adm
             cliente = new Clientes_adm(idCliente, nombres, apellidos, nit, genero, telefono, correoElectronico);
 
-            // Acción según el valor del botón presionado
+           // Acción según el valor del botón presionado
             if (request.getParameter("btn_agregar") != null) {
+                // Agregar el cliente y verificar si fue exitoso
                 if (cliente.agregarCliente(request) > 0) {
-                    response.sendRedirect("clientes.jsp");
+
+                    // Redirigir a index.jsp para mostrar el modal
+                    request.getRequestDispatcher("credenciales.jsp").forward(request, response);
                 } else {
                     response.getWriter().println("Error al agregar cliente.");
                 }
             }
 
-            if (request.getParameter("btn_modificar") != null) {
-                if (cliente.modificarCliente() > 0) {
-                    response.sendRedirect("clientes.jsp");
-                } else {
-                    response.getWriter().println("Error al modificar cliente.");
-                }
-            }
 
-            if (request.getParameter("btn_eliminar") != null) {
-                if (cliente.eliminarCliente() > 0) {
-                    response.sendRedirect("clientes.jsp");
-                } else {
-                    response.getWriter().println("Error al eliminar cliente.");
-                }
-            }
+
         } catch (IllegalArgumentException e) {
             response.getWriter().println("Error: " + e.getMessage());
         } catch (IOException e) {
