@@ -19,6 +19,7 @@
                 <input type="text" id="buscar" name="buscar" placeholder="Buscar por ID" class="form-control d-inline-block" style="width: auto; display: inline;">
                 <button type="button" name="btn_buscar" id="btn_buscar" class="btn btn-primary" onclick="mostrarModalBuscar()">Buscar</button>
                 <a href="puestos.jsp" class="btn btn-primary">Tabla Puestos</a>
+                <a href="ventas.jsp" class="btn btn-primary">Ventas</a>
             </div>
         </div>
     </div>

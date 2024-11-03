@@ -56,10 +56,13 @@
         <servlet-name>sr_clientes_p</servlet-name>
         <servlet-class>controlador.sr_clientes_p</servlet-class>
     </servlet>
+<<<<<<< HEAD
+=======
     <servlet>
         <servlet-name>sr_compra_cliente1</servlet-name>
         <servlet-class>controlador.sr_compra_cliente</servlet-class>
     </servlet>
+>>>>>>> f3587edba80a5271803db89211bb6f40fc19ce40
     <servlet-mapping>
         <servlet-name>sr_productos</servlet-name>
         <url-pattern>/admin/Empleado/sr_productos</url-pattern>
@@ -129,8 +132,11 @@
         <servlet-name>sr_clientes_p</servlet-name>
         <url-pattern>/sr_clientes_p</url-pattern>
     </servlet-mapping>
+<<<<<<< HEAD
+=======
     <servlet-mapping>
         <servlet-name>sr_compra_cliente1</servlet-name>
         <url-pattern>/sr_compra_cliente1</url-pattern>
     </servlet-mapping>
+>>>>>>> f3587edba80a5271803db89211bb6f40fc19ce40
 </web-app>

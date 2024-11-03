@@ -182,7 +182,11 @@ public class Ventas {
         }
 
         // Actualizar la existencia del producto
+<<<<<<< HEAD
+        String queryActualizarCantidad = "UPDATE productos SET existencia = existencia + ? WHERE idProducto = ?;";
+=======
         String queryActualizarCantidad = "UPDATE productos SET existencia = existencia - ? WHERE idProducto = ?;";
+>>>>>>> f3587edba80a5271803db89211bb6f40fc19ce40
         parametroActualizarCantidad = conexionDB.conectar_db.prepareStatement(queryActualizarCantidad);
         parametroActualizarCantidad.setInt(1, cantidad);
         parametroActualizarCantidad.setInt(2, idProducto);
@@ -419,4 +423,8 @@ public DefaultTableModel leerVentas_1() {
         }
         return drop;
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> f3587edba80a5271803db89211bb6f40fc19ce40

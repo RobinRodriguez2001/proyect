@@ -7,7 +7,7 @@
         <div class="col-md-6 d-flex flex-column">
             <h3>Formulario Proveedores</h3>
             <div class="text-center">
-                <button type="button" name="btn_nuevo" id="btn_nuevo" class="btn btn-info" data-toggle="modal" data-target="#modal_buscar_proveedor" onclick="limpiar()">Nuevo</button>
+                <button type="button" name="btn_nuevo" id="btn_nuevo" class="btn btn-info" data-toggle="modal" data-target="#modal_proveedor" onclick="limpiar()">Nuevo</button>
             </div>
         </div>
         
@@ -17,6 +17,7 @@
             <div class="text-center">
                 <input type="text" id="buscar_proveedor" name="buscar_proveedor" placeholder="Buscar por ID o nombre" class="form-control d-inline-block" style="width: auto; display: inline;">
                 <button type="button" name="btn_buscar" id="btn_buscar" class="btn btn-primary" data-toggle="modal" data-target="#modal_buscar_proveedor">Buscar</button>
+                <a href="compras.jsp" class="btn btn-primary"> Compras</a>
             </div>
         </div>
     </div>
@@ -190,7 +191,7 @@ $("#buscar_proveedor").on("keyup", function() {
     $("#tbl_proveedor tr").filter(function() {
         var id = $(this).find("td").eq(0).text().toLowerCase();
         // Verifica si el valor de búsqueda está presente en el ID
-        $(this).toggle(id.includes(value));
+        $(this).toggle(id === value);
     });
 });
 

@@ -3,6 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
+            <file>file:/C:/Users/robin/Videos/Captures/Proyecto/web/index.jsp</file>
+            <file>file:/C:/Users/robin/Videos/Captures/Proyecto/web/admin/Administrador/ventas.jsp</file>
+            <file>file:/C:/Users/robin/Videos/Captures/Proyecto/src/java/modelo/productos.java</file>
+            <file>file:/C:/Users/robin/Videos/Captures/Proyecto/src/java/modelo/conexion.java</file>
+=======
             <file>file:/C:/Users/saqui/OneDrive/Escritorio/fork/proyectos/src/java/controlador/sr_ComprasDetalle_adm.java</file>
             <file>file:/C:/Users/saqui/OneDrive/Escritorio/fork/proyectos/src/java/modelo/Clientes_adm.java</file>
             <file>file:/C:/Users/saqui/OneDrive/Escritorio/fork/proyectos/web/comprar_cliente.jsp</file>
@@ -25,6 +31,7 @@
             <file>file:/C:/Users/saqui/OneDrive/Escritorio/fork/proyectos/src/java/controlador/sr_cuentacliente.java</file>
             <file>file:/C:/Users/saqui/OneDrive/Escritorio/fork/proyectos/src/java/controlador/sr_marcas_adm.java</file>
             <file>file:/C:/Users/saqui/OneDrive/Escritorio/fork/proyectos/web/credenciales.jsp</file>
+>>>>>>> f3587edba80a5271803db89211bb6f40fc19ce40
         </group>
     </open-files>
 </project-private>

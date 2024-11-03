@@ -121,4 +121,8 @@ public class sr_compra_cliente extends HttpServlet {
     public String getServletInfo() {
         return "Servlet que maneja las operaciones de ventas y detalles de ventas.";
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> f3587edba80a5271803db89211bb6f40fc19ce40

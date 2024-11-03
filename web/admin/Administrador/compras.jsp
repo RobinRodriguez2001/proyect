@@ -17,6 +17,7 @@
             <div class="text-center">
                 <input type="text" id="buscar" name="buscar" placeholder="Buscar por ID Proveedor" class="form-control d-inline-block" style="width: auto; display: inline;">
                 <button type="button" name="btn_buscar" id="btn_buscar" class="btn btn-primary" data-toggle="modal" data-target="#modal_buscarproveedor">Buscar</button>
+                <a href="proveedores.jsp" class="btn btn-primary">Proveedores</a>
             </div>
         </div>
     </div>
@@ -37,13 +38,36 @@
                         <input type="text" name="txt_noOrdenCompra" id="txt_noOrdenCompra" class="form-control" placeholder="Ejemplo: 12312" required>
                         <br>
 
-                        <label for="lbl_idProveedor"><b>ID Proveedor</b></label>
-                        <input type="text" name="txt_idProveedor" id="txt_idProveedor" class="form-control" placeholder="ID del proveedor" required>
- 
+                        <label for="drop_proveedores"><b>Proveedor</b></label>
+                        <select name="drop_proveedores" id="drop_proveedores" class="form-control">
+                            <option value="">Seleccione un Proveedor</option>
+                            <% 
+                                Compras com = new Compras();
+                                HashMap<String, List<String>> dropPro = com.drop_proveedores();
+                                for (String idProveedor : dropPro.keySet()) {
+                                    List<String> datos = dropPro.get(idProveedor);
+                                    String proveedor = datos.get(0);
+                                    out.println("<option value='" + idProveedor + "'>" + proveedor + " </option>");
+                                }
+                            %>                                     
+                        </select>
                         <!-- Campo de fecha para el formulario -->
                         <label for="lbl_fecha_orden"><b>Fecha Orden</b></label>
                         <input type="date" name="txt_fecha_orden" id="txt_fecha_orden" class="form-control" required>
                         <input type="hidden" name="txt_fechaorden" id="txt_fechaorden" class="form-control" readonly>
+                        
+                        <label for="lbl_idCompraDetalle"><b>ID Detalle Compra</b></label>
+                        <input type="text" name="txt_idCompraDetalle" id="txt_idCompraDetalle" class="form-control" value="0" readonly> 
+                        
+                        <label for="lbl_idProducto"><b>ID Producto</b></label>
+                        <input type="text" name="txt_idProducto" id="txt_idProducto" class="form-control" placeholder="ID del producto" required>
+
+                        <label for="lbl_cantidad"><b>Cantidad</b></label>
+                        <input type="number" name="txt_cantidad" id="txt_cantidad" class="form-control" placeholder="Cantidad" required>
+
+                        <label for="lbl_precioCostoUnitario"><b>Precio Costo Unitario</b></label>
+                        <input type="number" name="txt_precioCostoUnitario" id="txt_precioCostoUnitario" step="0.01" class="form-control" placeholder="Precio costo unitario" required>
+                        <br>
 
                         <br>
                         <button name="btn_agregar" id="btn_agregar" value="agregar" class="btn btn-primary btn-lg">Agregar</button>
@@ -70,6 +94,7 @@
                             <th>NIT</th>
                             <th>DIRECCION</th>
                             <th>TELEFONO</th>
+
                         </tr>
                     </thead>
                     <tbody id="tbl_proveedor">
@@ -96,7 +121,7 @@
 </div>
 
 
-    <table class="table table-striped">
+     <table class="table table-striped">
         <thead>
             <tr>
                 <th>ID</th>
@@ -104,6 +129,11 @@
                 <th>ID Proveedor</th>
                 <th>Fecha Orden</th>
                 <th>Fecha Ingreso</th>
+                <th>ID Compra Detalle</th>
+                <th>ID Producto</th>
+                <th>Cantidad</th>
+                <th>Precio Costo Unitario</th>
+                <th>Total</th>
             </tr>
         </thead>
         <tbody id="tbl_compras">
@@ -112,14 +142,25 @@
             DefaultTableModel tablaCompras = compra.leerCompras(); 
             
             for (int t = 0; t < tablaCompras.getRowCount(); t++) {
-                out.println("<tr data-id='" + tablaCompras.getValueAt(t, 0) + "'>");
-                out.println("<td>" + tablaCompras.getValueAt(t, 0) + "</td>");
-                out.println("<td>" + tablaCompras.getValueAt(t, 1) + "</td>");
-                out.println("<td>" + tablaCompras.getValueAt(t, 2) + "</td>");
-                out.println("<td>" + tablaCompras.getValueAt(t, 3) + "</td>");
-                out.println("<td>" + tablaCompras.getValueAt(t, 4) + "</td>");
-                out.println("</tr>");
-            }
+                    out.println("<tr data-id='" + tablaCompras.getValueAt(t, 0) + "' data-id_proveedor='" + tablaCompras.getValueAt(t, 2) +  "'>");           
+                    out.println("<td>" + tablaCompras.getValueAt(t, 0) + "</td>");
+                    out.println("<td>" + tablaCompras.getValueAt(t, 1) + "</td>");
+                    out.println("<td>" + tablaCompras.getValueAt(t, 2) + "</td>");
+                    out.println("<td>" + tablaCompras.getValueAt(t, 3) + "</td>");
+                    out.println("<td>" + tablaCompras.getValueAt(t, 4) + "</td>");
+                    out.println("<td>" + tablaCompras.getValueAt(t, 5) + "</td>");
+                    out.println("<td>" + tablaCompras.getValueAt(t, 6) + "</td>");
+                    out.println("<td>" + tablaCompras.getValueAt(t, 7) + "</td>");
+                    out.println("<td>" + tablaCompras.getValueAt(t, 8) + "</td>");
+                    // Calcular el total
+                    int cantidad = Integer.parseInt(tablaCompras.getValueAt(t, 7).toString());
+                    double precio = Double.parseDouble(tablaCompras.getValueAt(t, 8).toString());
+                    double total = cantidad * precio;
+                    out.println("<td>" + total + "</td>");
+                    out.println("</tr>");
+                }
+                
+            
             %>
         </tbody>
     </table>
@@ -134,10 +175,14 @@
     function limpiar() {
         $("#txt_idCompra").val(0);
         $("#txt_noOrdenCompra").val('');
-        $("#txt_idProveedor").val('');
+        $("#drop_proveedores").val('');
         $("#txt_fecha_orden").val('');
-        $("#txt_fechaorden").val(''); // Limpiar el campo de fecha oculto
-        $('#txt_fecha_orden').prop('disabled', false);
+        $("#txt_fecha_ingreso").val('');
+        $("#txt_idCompraDetalle").val(0);
+        $("#txt_idProducto").val('');
+        $("#txt_cantidad").val('');
+        $("#txt_precioCostoUnitario").val('');
+
     }
 
     // Al hacer clic en una fila de la tabla de compras
@@ -146,17 +191,25 @@
         var idCompra = target.find("td").eq(0).text();
         var noOrdenCompra = target.find("td").eq(1).text();
         var idProveedor = target.find("td").eq(2).text();
-        var fechaOrden = target.find("td").eq(3).text(); // Capturar la fecha de la tabla en formato texto
+        var fechaOrden = target.find("td").eq(3).text();
+        var fechaIngreso = target.find("td").eq(4).text();
+        var idCompraDetalle = target.find("td").eq(5).text();
+        var idProducto = target.find("td").eq(6).text();
+        var cantidad = target.find("td").eq(7).text();
+        var precioCostoUnitario = target.find("td").eq(8).text();
 
         // Asignar los valores capturados al formulario
         $("#txt_idCompra").val(idCompra);
         $("#txt_noOrdenCompra").val(noOrdenCompra);
-        $("#txt_idProveedor").val(idProveedor);
-
-        // Asignar la fecha capturada al campo de texto y deshabilitarlo
-        $("#txt_fechaorden").val(fechaOrden);
+        $("#drop_proveedores").val(idProveedor);
+        $("#txt_fecha_orden").val(fechaOrden);
         $("#txt_fecha_orden").prop('readonly', true);
-        $('#txt_fecha_orden').val(fechaOrden).prop('disabled', true);
+        $('#txt_fecha_orden').val(fechaOrden).prop(fechaOrden);
+        $("#txt_fecha_ingreso").val(fechaIngreso).prop('disabled', true);
+        $("#txt_idCompraDetalle").val(idCompraDetalle);
+        $("#txt_idProducto").val(idProducto);
+        $("#txt_cantidad").val(cantidad);
+        $("#txt_precioCostoUnitario").val(precioCostoUnitario);
 
         // Mostrar el modal
         $('#modal_compra').modal('show');
@@ -166,14 +219,10 @@
     $('#tbl_proveedor').on('click', 'tr', function(evt) {
         var target = $(this);
         var idProveedor = target.find("td").eq(0).text();
-        var proveedor = target.find("td").eq(1).text();
-        var nit = target.find("td").eq(2).text();
-        var telefono = target.find("td").eq(3).text();
-        // Asignar el ID del proveedor al campo correspondiente
         $("#txt_idProveedor").val(idProveedor);
 
-        // Mostrar el modal de compra
-        $('#modal_buscarproveedor').modal('hide'); // Ocultar el modal de proveedores
+        // Ocultar el modal de proveedores
+        $('#modal_buscarproveedor').modal('hide');
     });
 
     // Función para filtrar la tabla de proveedores
@@ -183,10 +232,10 @@
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
         });
     });
-    document.getElementById('closeModal').addEventListener('click', function() {
-        var modal = document.querySelector('.modal');
-        var bootstrapModal = bootstrap.Modal.getInstance(modal); // obtén la instancia del modal
-        bootstrapModal.hide(); // oculta el modal
+
+    // Cerrar el modal de compra al hacer clic en el botón de cierre
+    $("#closeModal").on("click", function() {
+        $('#modal_compra').modal('hide');
     });
 </script>
 

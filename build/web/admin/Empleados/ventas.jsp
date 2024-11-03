@@ -29,6 +29,12 @@
                 
                 <!-- Botón para buscar que abre el modal -->
                 <button type="button" name="btn_buscar_producto" id="btn_buscar_producto" class="btn btn-primary">Buscar</button>
+                <select class="form-control" id="opcionesSelect" onchange="redirigir()">
+                    <option value="">Seleccionar</option>
+                    <option value="empleado">Empleado</option>
+                    <option value="cliente">Cliente</option>
+                </select>
+
             </div>
         </div>
     </div>
@@ -57,7 +63,8 @@
                         <label for="lbl_fecha_factura"><b>Fecha Factura</b></label>
                         <input type="date" name="txt_fecha_factura" id="txt_fecha_factura" class="form-control" required>
                         <br>
-
+                        
+                        <label for="lbl_cliente"><b>Cliente</b></label>
                         <select name="drop_cliente" id="drop_cliente" class="form-control">
                             <option value="">Seleccione un cliente</option>
                             <% 
@@ -72,9 +79,19 @@
                             %>                                     
                         </select>
                         
-<label for="lbl_idEmpleado"><b>Id Empleado</b></label> 
-    <input type="text" name="txt_idEmpleado" id="txt_idEmpleado" class="form-control" value="<%= idEmpleado %>" readonly>
-    <br>
+                        <label for="lbl_empleado"><b>Empleado</b></label>
+                        <select name="drop_empleado" id="drop_empleado" class="form-control">
+                            <option value="<%= idEmpleado %>">Empleado</option>
+                        <% 
+                                Ventas ven_1 = new Ventas();
+                                HashMap<String, List<String>> dropEmpleado = ven_1.drop_empleado();
+                                for (String idEmpleados : dropEmpleado.keySet()) {
+                                    List<String> datos = dropEmpleado.get(idEmpleados);
+                                    String nombres = datos.get(0);
+                                    out.println("<option value='" + idEmpleados + "'>" + nombres + "</option>");
+                                }
+                            %>
+                        </select>
                         
                         <label for="lbl_idProducto"><b>ID Producto</b></label>
                         <input type="text" name="txt_idProducto" id="txt_idProducto" class="form-control" placeholder="ID del producto" required>
@@ -116,7 +133,7 @@
             DefaultTableModel tabla = venta.leerVentas_1(); 
             
             for (int t = 0; t < tabla.getRowCount(); t++) {
-                out.println("<tr data-id='" + tabla.getValueAt(t, 0) + "' data-id_cliente='" + tabla.getValueAt(t, 4) + "'>");
+                out.println("<tr data-id='" + tabla.getValueAt(t, 0) + "' data-id_cliente='" + tabla.getValueAt(t, 4) + "' data-id_empleado='" + tabla.getValueAt(t, 5) +  "'>");
 
                 out.println("<td>" + tabla.getValueAt(t, 0) + "</td>");
                 out.println("<td>" + tabla.getValueAt(t, 1) + "</td>");
@@ -166,7 +183,7 @@
                         DefaultTableModel tabla_1 = venta_1.leerVentas(); 
 
                         for (int t = 0; t < tabla_1.getRowCount(); t++) {
-                            out.println("<tr data-id='" + tabla.getValueAt(t, 0) + "' data-id_cliente='" + tabla_1.getValueAt(t, 4) + "'>");
+                            out.println("<tr data-id='" + tabla.getValueAt(t, 0) + "' data-id_cliente='" + tabla_1.getValueAt(t, 4) +"' data-id_empleado='" + tabla_1.getValueAt(t, 5) +  "'>");
                             out.println("<td>" + tabla_1.getValueAt(t, 0) + "</td>");
                             out.println("<td>" + tabla_1.getValueAt(t, 1) + "</td>");
                             out.println("<td>" + tabla_1.getValueAt(t, 2) + "</td>");
@@ -317,7 +334,7 @@ $('#tbl_ventas').on('click', 'tr', function(evt) {
     var serie = target.find("td").eq(2).text();
     var fechaFactura = target.find("td").eq(3).text();
     var idCliente = parseInt(target.data('id_cliente'));
-    var idEmpleado = parseInt(target.find("td").eq(5).text());
+    var idEmpleado = parseInt(target.data('id_empleado'));
     var idProducto = target.find("td").eq(7).text();
     var cantidad = target.find("td").eq(8).text();
     var precio = target.find("td").eq(9).text();
@@ -328,9 +345,9 @@ $('#tbl_ventas').on('click', 'tr', function(evt) {
     $("#txt_serie").val(serie);
     $("#txt_fecha_factura").val(fechaFactura);
     $("#txt_fecha_factura").prop('readonly', true);
-    $('#txt_fecha_factura').val(fechaFactura).prop('disabled', true);
+    $('#txt_fecha_factura').val(fechaFactura).prop(fechaFactura);
     $("#drop_cliente").val(idCliente);
-    $("#txt_idEmpleado").val(idEmpleado);
+    $("#drop_empleado").val(idEmpleado);
     $("#txt_idProducto").val(idProducto);
     $("#txt_cantidad").val(cantidad);
     $("#txt_precioVentaUnitario").val(precio);
@@ -395,7 +412,21 @@ $('#tbl_ventas').on('click', 'tr', function(evt) {
             var bootstrapModal = bootstrap.Modal.getInstance(modal); // obtén la instancia del modal
             bootstrapModal.hide(); // oculta el modal
         });
-    </script>
+</script>
+<script>
+function redirigir() {
+    var select = document.getElementById("opcionesSelect");
+    var valorSeleccionado = select.value;
+
+    // Redirigir a marcas.jsp si se selecciona la opción "Venta"
+    if (valorSeleccionado === "empleado") {
+        window.location.href = "empleados.jsp";
+    }
+    if (valorSeleccionado === "cliente") {
+        window.location.href = "clientes .jsp";
+    }
+    // Aquí puedes agregar más condiciones para otras opciones si es necesario
+}
 </script>
 
 <%@ include file="pie_administrador.jsp" %>

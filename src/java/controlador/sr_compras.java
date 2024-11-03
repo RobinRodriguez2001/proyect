@@ -23,16 +23,22 @@ public class sr_compras extends HttpServlet {
             int noOrdenCompra = Integer.parseInt(request.getParameter("txt_noOrdenCompra")); // Conversión de String a int
 
             // Obtener fecha de orden y validar
-            String fechaOrden = request.getParameter("txt_fechaorden");
+            String fechaOrden = request.getParameter("txt_fecha_orden");
             if (fechaOrden == null || fechaOrden.isEmpty()) {
                 throw new IllegalArgumentException("La fecha de orden no puede estar vacía.");
             }
 
             // Obtener id del proveedor
-            int idProveedor = Integer.parseInt(request.getParameter("txt_idProveedor")); // Conversión de String a int
+            int idProveedor = Integer.parseInt(request.getParameter("drop_proveedores")); // Conversión de String a int
+
+            // Recuperar y convertir parámetros
+            long idCompraDetalle = Long.parseLong(request.getParameter("txt_idCompraDetalle")); // Conversión a long
+            int idProducto = Integer.parseInt(request.getParameter("txt_idProducto")); // Conversión a int
+            int cantidad = Integer.parseInt(request.getParameter("txt_cantidad")); // Conversión a int
+            double precioCostoUnitario = Double.parseDouble(request.getParameter("txt_precioCostoUnitario")); // Conversión a double
 
             // Crear objeto Compras
-            compra = new Compras(idCompra, noOrdenCompra, idProveedor, fechaOrden);
+            compra = new Compras(idCompra, noOrdenCompra, idProveedor, fechaOrden, idCompraDetalle, idProducto, cantidad, precioCostoUnitario);
 
             // Acción según el valor del botón presionado
             if (request.getParameter("btn_agregar") != null) {

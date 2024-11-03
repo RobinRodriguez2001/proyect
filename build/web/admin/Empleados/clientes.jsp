@@ -17,6 +17,7 @@
             <div class="text-center">
                 <input type="text" id="buscar" name="buscar" placeholder="Buscar por ID o nombre" class="form-control d-inline-block" style="width: auto; display: inline;">
                 <button type="button" name="btn_buscar" id="btn_buscar" class="btn btn-primary" data-toggle="modal" data-target="#modal_buscarcliente">Buscar</button>
+                <a href="ventas.jsp" class="btn btn-primary">Ventas</a>
             </div>
         </div>
     </div>
