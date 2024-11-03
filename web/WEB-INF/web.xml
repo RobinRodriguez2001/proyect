@@ -48,6 +48,14 @@
         <servlet-name>sr_cuentacliente</servlet-name>
         <servlet-class>controlador.sr_cuentacliente</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>sr_compra_cliente</servlet-name>
+        <servlet-class>controlador.sr_compra_cliente</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>sr_clientes_p</servlet-name>
+        <servlet-class>controlador.sr_clientes_p</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>sr_productos</servlet-name>
         <url-pattern>/admin/Empleado/sr_productos</url-pattern>
@@ -57,6 +65,8 @@
         <servlet-name>sr_ventas</servlet-name>
         <url-pattern>/admin/Empleado/sr_ventas</url-pattern>
         <url-pattern>/admin/Administrador/sr_ventas</url-pattern>
+        <url-pattern>/admin/Empleados/sr_ventas</url-pattern>
+        <url-pattern>/sr_ventas</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>sr_marcas_adm</servlet-name>
@@ -106,5 +116,13 @@
         <servlet-name>sr_cuentacliente</servlet-name>
         <url-pattern>/admin/Empleado/sr_cuentacliente</url-pattern>
         <url-pattern>/admin/Administrador/sr_cuentacliente</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>sr_compra_cliente</servlet-name>
+        <url-pattern>/sr_compra_cliente</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>sr_clientes_p</servlet-name>
+        <url-pattern>/sr_clientes_p</url-pattern>
     </servlet-mapping>
 </web-app>

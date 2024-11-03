@@ -1,5 +1,7 @@
 package modelo;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -117,10 +119,13 @@ public class Clientes_adm {
 
 
 // Método para agregar un cliente y sus credenciales
-public int agregarCliente() {
+public int agregarCliente(HttpServletRequest request) {
     int retorno = 0;
     PreparedStatement parametro = null;
     ResultSet rs = null;
+    String username = ""; 
+    String password = ""; 
+        
     try {
         conexionDB = new conexion();
         conexionDB.abrir_conexion(); // Asegúrate de que este método se ejecute correctamente
@@ -148,10 +153,10 @@ public int agregarCliente() {
             }
 
             // Generar el nombre de usuario
-            String username = getNombres().substring(0, 1).toLowerCase() + getApellidos().toLowerCase() + getIdCliente();
+            username = getNombres().substring(0, 1).toLowerCase() + getApellidos().toLowerCase() + getIdCliente();
 
             // Generar una contraseña aleatoria
-            String password = generarContrasena(8); // Cambia la longitud según tus necesidades
+            password = generarContrasena(8); // Cambia la longitud según tus necesidades
 
             // Insertar credenciales
             String userQuery = "INSERT INTO users (username, password, idCliente, mec) VALUES (?, ?, ?, 'cliente');";
@@ -170,23 +175,14 @@ public int agregarCliente() {
         } else {
             System.err.println("Error al insertar el cliente.");
         }
+        request.setAttribute("username", username);
+        request.setAttribute("password", password);
 
     } catch (SQLException ex) {
         System.err.println("Error al agregar cliente: " + ex.getMessage());
         ex.printStackTrace(); // Imprimir la traza de la excepción
     } finally {
-        try {
-            if (rs != null) {
-                rs.close();
-            }
-            if (parametro != null) {
-                parametro.close();
-            }
-            if (conexionDB != null) {
-                conexionDB.cerrar_conexion(); // Cerrar la conexión si la abriste
-            }
-        } catch (SQLException e) {
-        }
+        closeResources(rs, parametro);
     }
     return retorno;
 }

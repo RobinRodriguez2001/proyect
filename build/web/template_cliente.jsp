@@ -8,6 +8,7 @@
 <%@page import="java.sql.ResultSet" %>
 <%@page import="java.sql.SQLException" %>
 <%@ page import="modelo.Cuenta" %>
+<%@ page import="modelo.productos" %>
 <%@page import="modelo.Ventas" %>
 <%@page import="modelo.Clientes_adm" %>
 <%@page import="java.util.HashMap"%>
@@ -15,93 +16,107 @@
 <%@page import="modelo.Empleados_adm" %>
 
 <%
-    // Recuperar el usuario de la sesión
+    // Recuperar el usuario de la sesión (si ya existe)
     Cuenta usuario1 = (Cuenta) session.getAttribute("usuario");
     
-%>
+    // Verificar credenciales enviadas
+    String username = request.getParameter("username1");
+    String password = request.getParameter("password1");
 
- <%
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
+    if (username != null && password != null) {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
 
-        if (username != null && password != null) {
-            Connection conn = null;
-            PreparedStatement stmt = null;
-            ResultSet rs = null;
+        try {
+            // Conectar a la base de datos
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/updated", "root", "Israel_14");
 
-            try {
-                Class.forName("com.mysql.jdbc.Driver");
-                conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/newdb", "root", "danigero");
+            // Preparar consulta para buscar usuario
+            String sql = "SELECT id, password, attempts, lock_time, mec, idCliente FROM users WHERE username = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, username);
+            rs = stmt.executeQuery();
+            
 
-                String sql = "SELECT id, password, attempts, lock_time, mec, idCliente FROM users WHERE username = ?";
-                stmt = conn.prepareStatement(sql);
-                stmt.setString(1, username);
-                rs = stmt.executeQuery();
+            if (rs.next()) {
+                // Obtener datos de usuario
+                String dbPassword = rs.getString("password");
+                int attempts = rs.getInt("attempts");
+                Timestamp lockTime = rs.getTimestamp("lock_time");
+                String role = rs.getString("mec");
+                int idCliente = rs.getInt("idCliente");
 
-                if (rs.next()) {
-                    String dbPassword = rs.getString("password");
-                    int attempts = rs.getInt("attempts");
-                    Timestamp lockTime = rs.getTimestamp("lock_time");
-                    String role = rs.getString("mec");
-                    int idCliente = rs.getInt("idCliente");
+                // Guardar idCliente en la sesión
+                session.setAttribute("idCliente", idCliente);
 
-                    long currentTimeMillis = System.currentTimeMillis();
-                    boolean locked = false;
+                long currentTimeMillis = System.currentTimeMillis();
+                boolean locked = false;
 
-                    if (lockTime != null && (currentTimeMillis - lockTime.getTime()) < 300000) {
-                        out.println("<p style='color:red;'>Tienes varios intentos fallidos. Por favor espera 5 minutos.</p>");
-                        locked = true;
-                    }
+                // Verificar si la cuenta está bloqueada
+                if (lockTime != null && (currentTimeMillis - lockTime.getTime()) < 300000) {
+                    out.println("<p style='color:red;'>Tienes varios intentos fallidos. Por favor espera 5 minutos.</p>");
+                    locked = true;
+                }
 
-                    if (!locked) {
-                        if (password.equals(dbPassword)) {
+                if (!locked) {
+                    // Verificar contraseña
+                    if (password.equals(dbPassword)) {
+                        // Verificar si el usuario es "cliente"
+                        if ("cliente".equals(role)) {
                             // Crear objeto Cuenta y almacenar en la sesión
                             Cuenta usuario = new Cuenta(rs.getInt("id"), username, dbPassword);
-                            session.setAttribute("usuario", usuario);  // Guardar el objeto Cuenta en la sesión
+                            session.setAttribute("usuario", usuario);
 
-                            
-                            response.sendRedirect("index.jsp");   
-                            
-
-                            // Resetear intentos
+                            // Resetear intentos de inicio de sesión
                             String resetAttemptsSql = "UPDATE users SET attempts = 0, lock_time = NULL WHERE username = ?";
-                            PreparedStatement resetStmt = conn.prepareStatement(resetAttemptsSql);
-                            resetStmt.setString(1, username);
-                            resetStmt.executeUpdate();
-                            resetStmt.close();
-                            } else {
-                                attempts++;
-                                if (attempts >= 3) {
-                                    String lockSql = "UPDATE users SET lock_time = NOW() WHERE username = ?";
-                                    PreparedStatement lockStmt = conn.prepareStatement(lockSql);
-                                    lockStmt.setString(1, username);
-                                    lockStmt.executeUpdate();
-                                    lockStmt.close();
-                                    out.println("<p style='color:red;'>Demasiados intentos fallidos. Cuenta bloqueada por 5 minutos.</p>");
-                                } else {
-                                    String updateAttemptsSql = "UPDATE users SET attempts = ? WHERE username = ?";
-                                    PreparedStatement updateStmt = conn.prepareStatement(updateAttemptsSql);
-                                    updateStmt.setInt(1, attempts);
-                                    updateStmt.setString(2, username);
-                                    updateStmt.executeUpdate();
-                                    updateStmt.close();
-                                    out.println("<p style='color:red;'>Credenciales inválidas. Intento " + attempts + " de 3.</p>");
-                                }
+                            try (PreparedStatement resetStmt = conn.prepareStatement(resetAttemptsSql)) {
+                                resetStmt.setString(1, username);
+                                resetStmt.executeUpdate();
                             }
+
+                            // Redireccionar al usuario
+                            response.sendRedirect("index.jsp");
+                        } else {
+                            out.println("<p style='color:red;'>Solo los usuarios con rol 'cliente' pueden iniciar sesión.</p>");
                         }
+                    } else {
+                        // Incrementar intentos fallidos
+                        attempts++;
+                        if (attempts >= 3) {
+                            String lockSql = "UPDATE users SET lock_time = NOW() WHERE username = ?";
+                            try (PreparedStatement lockStmt = conn.prepareStatement(lockSql)) {
+                                lockStmt.setString(1, username);
+                                lockStmt.executeUpdate();
+                            }
+                            out.println("<p style='color:red;'>Demasiados intentos fallidos. Cuenta bloqueada por 5 minutos.</p>");
+                        } else {
+                            String updateAttemptsSql = "UPDATE users SET attempts = ? WHERE username = ?";
+                            try (PreparedStatement updateStmt = conn.prepareStatement(updateAttemptsSql)) {
+                                updateStmt.setInt(1, attempts);
+                                updateStmt.setString(2, username);
+                                updateStmt.executeUpdate();
+                            }
+                            out.println("<p style='color:red;'>Credenciales inválidas. Intento " + attempts + " de 3.</p>");
+                        }
+                    }
+                }
             } else {
                 out.println("<p style='color:red;'>Usuario no existe.</p>");
             }
-            } catch (Exception e) {
-                e.printStackTrace();
-                out.println("<p style='color:red;'>Error conectando a la base de datos.</p>");
-            } finally {
-                try { if (rs != null) rs.close(); } catch (SQLException e) { e.printStackTrace(); }
-                try { if (stmt != null) stmt.close(); } catch (SQLException e) { e.printStackTrace(); }
-                try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            out.println("<p style='color:red;'>Error conectando a la base de datos.</p>");
+        } finally {
+            // Cerrar recursos
+            try { if (rs != null) rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+            try { if (stmt != null) stmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+            try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
         }
-    %>
+    }
+%>
+
 
 <!DOCTYPE html>
 <html>
@@ -219,10 +234,10 @@
 </head>
 <body>
     <header>
-           <nav class="navbar navbar-expand-lg navbar-night bg-night">
-        <div class="container-fluid">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
             <a class="navbar-brand" href="login.jsp">
-                <img src="img/as.png">
+                <img src="img/as.png" alt="Logo" style="width: 180px; height: auto;">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -232,36 +247,29 @@
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="index.jsp">Inicio</a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Catálogo</a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                           
-                        </ul>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="compras.jsp">
+                            <img src="img/10.png" alt="Compras" style="width: 50px; height: auto; margin-right: 5px;">Compras
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#.jsp"><img src="img/10.png">Compras</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="contactanos.jsp">Contactanos</a>
+                        <a class="nav-link active" aria-current="page" href="contactanos.jsp">Contáctanos</a>
                     </li>
                 </ul>
-                <form class="d-flex" action="buscarProductos.jsp" >
-                    
+                <form class="d-flex align-items-center" action="buscarProductos.jsp">
                     <!-- Botón para Iniciar Sesión -->
-                    <button type="button" class="btn btn-outline-success btn-long" data-bs-toggle="modal" data-bs-target="#loginModal" 
+                    <button type="button" class="btn btn-outline-light me-2" data-bs-toggle="modal" data-bs-target="#loginModal" 
                             <%= (usuario1 != null) ? "style='display:none;'" : "" %>>
                         Iniciar Sesión
                     </button>
 
                     <!-- Mostrar el nombre del usuario si está logueado y agregar un enlace para cerrar sesión -->
                     <% if (usuario1 != null) { %>
-                        <span class="welcome-text">
-                            <a href="CerrarSesion.jsp" style="color:inherit; text-decoration:none;"><%= usuario1.getUsername() %></a>
+                        <span class="text-light me-3">
+                            Bienvenido, <a href="CerrarSesion.jsp" style="color:inherit; text-decoration:none;"><%= usuario1.getUsername() %></a>
                         </span>
                     <% } %>
-                    
-                    <input class="form-control me-2" type="search" name="nombreProducto" placeholder="Buscar por nombre" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">BUSCAR</button>
+
                 </form>
             </div>
         </div>
@@ -270,29 +278,82 @@
     <br>
     <!-- Modal de Iniciar Sesión -->
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-dark text-light">
                     <h5 class="modal-title">Iniciar Sesión</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <!-- Removemos el action del formulario -->
                     <form id="loginForm" method="post">
                         <div class="mb-3">
-                            <label for="username" class="form-label">Usuario</label>
-                            <input type="text" class="form-control" id="username" name="username" required>
+                            <label for="username1" class="form-label">Usuario</label>
+                            <input type="text" class="form-control" id="username1" name="username1" required>
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Contraseña</label>
-                            <input type="password" class="form-control" id="password" name="password" required>
+                            <input type="password" class="form-control" id="password1" name="password1" required>
                         </div>
-                        <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                        <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
                     </form>
-
-                    <p class="mt-3">¿No tienes una cuenta? <a href="#" >Regístrate aquí</a></p>
+                    <p class="mt-3 text-center">¿No tienes una cuenta? 
+                        <a href="#" class="text-primary" data-bs-toggle="modal" data-bs-target="#registerUserModal">Regístrate aquí</a>
+                    </p>
                 </div>
             </div>
         </div>
     </div>
-    </header>
+    
+    <!-- Modal para el registro de usuario -->
+<div class="modal fade" id="registerUserModal" tabindex="-1" aria-labelledby="registerUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="registerUserModalLabel">Registrar Usuario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="sr_clientes_p" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="txt_idCliente" class="form-label">ID Cliente</label>
+                        <input type="number" class="form-control" id="txt_idCliente" name="txt_idCliente" value="0" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="txt_nombres" class="form-label">Nombres</label>
+                        <input type="text" class="form-control" id="txt_nombres" name="txt_nombres" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="txt_apellidos" class="form-label">Apellidos</label>
+                        <input type="text" class="form-control" id="txt_apellidos" name="txt_apellidos" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="txt_nit" class="form-label">NIT</label>
+                        <input type="text" class="form-control" id="txt_nit" name="txt_nit" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="txt_genero" class="form-label">Género</label>
+                        <select class="form-select" id="txt_genero" name="txt_genero" required>
+                            <option value="0">Masculino</option>
+                            <option value="1">Femenino</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="txt_telefono" class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" id="txt_telefono" name="txt_telefono" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="txt_correo_electronico" class="form-label">Correo Electrónico</label>
+                        <input type="email" class="form-control" id="txt_correo_electronico" name="txt_correo_electronico" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary" name="btn_agregar">Registrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+    
+
+</header>
