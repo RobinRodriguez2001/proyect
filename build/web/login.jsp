@@ -94,7 +94,7 @@
 
                         try {
                             Class.forName("com.mysql.jdbc.Driver");
-                            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/newdb", "root", "danigero");
+                            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/newdb", "root", "ITLAP");
 
                             String sql = "SELECT id, password, attempts, lock_time, mec, idEmpleado FROM users WHERE username = ?";
                             stmt = conn.prepareStatement(sql);

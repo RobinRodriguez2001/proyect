@@ -48,6 +48,30 @@
         <servlet-name>sr_cuentacliente</servlet-name>
         <servlet-class>controlador.sr_cuentacliente</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>GenerarPDFServlet</servlet-name>
+        <servlet-class>reportes.GenerarPDFServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ServletComprasMeses</servlet-name>
+        <servlet-class>reportes.ServletComprasMeses</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>generarProductosPDF</servlet-name>
+        <servlet-class>reportes.generarProductosPDF</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>masculinogenerarPDF</servlet-name>
+        <servlet-class>reportes.masculinogenerarPDF</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GenerarPDFMasculinos</servlet-name>
+        <servlet-class>reportes.GenerarPDFMasculinos</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ComprasReport</servlet-name>
+        <servlet-class>reportes.ComprasReport</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>sr_productos</servlet-name>
         <url-pattern>/admin/Empleado/sr_productos</url-pattern>
@@ -106,5 +130,29 @@
         <servlet-name>sr_cuentacliente</servlet-name>
         <url-pattern>/admin/Empleado/sr_cuentacliente</url-pattern>
         <url-pattern>/admin/Administrador/sr_cuentacliente</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GenerarPDFServlet</servlet-name>
+        <url-pattern>/GenerarPDFServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServletComprasMeses</servlet-name>
+        <url-pattern>/ServletComprasMeses</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>generarProductosPDF</servlet-name>
+        <url-pattern>/generarProductosPDF</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>masculinogenerarPDF</servlet-name>
+        <url-pattern>/masculinogenerarPDF</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GenerarPDFMasculinos</servlet-name>
+        <url-pattern>/GenerarPDFMasculinos</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ComprasReport</servlet-name>
+        <url-pattern>/ComprasReport</url-pattern>
     </servlet-mapping>
 </web-app>

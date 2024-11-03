@@ -1,0 +1,2 @@
+modelo.GenerarPDFMasculinos
+modelo.GenerarPDFServlet

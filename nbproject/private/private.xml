@@ -3,9 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/ANDRES/Documents/programacion%202/proyecto%20final/proyect/web/template_cliente.jsp</file>
-            <file>file:/C:/Users/ANDRES/Documents/programacion%202/proyecto%20final/proyect/web/index.jsp</file>
-            <file>file:/C:/Users/ANDRES/Documents/programacion%202/proyecto%20final/proyect/web/contactanos.jsp</file>
+            <file>file:/C:/Users/marco.sinto/OneDrive%20-%20Casa%20Medica/Documentos/NetBeansProjects/PROYECTO%20PARTE%203%20PR/proyecto-Marco-Sinto/nbproject/build-impl.xml</file>
+            <file>file:/C:/Users/marco.sinto/OneDrive%20-%20Casa%20Medica/Documentos/NetBeansProjects/PROYECTO%20PARTE%203%20PR/proyecto-Marco-Sinto/src/java/modelo/Compras.java</file>
+            <file>file:/C:/Users/marco.sinto/OneDrive%20-%20Casa%20Medica/Documentos/NetBeansProjects/PROYECTO%20PARTE%203%20PR/proyecto-Marco-Sinto/src/java/reportes/GenerarPDFServlet.java</file>
+            <file>file:/C:/Users/marco.sinto/OneDrive%20-%20Casa%20Medica/Documentos/NetBeansProjects/PROYECTO%20PARTE%203%20PR/proyecto-Marco-Sinto/web/admin/Administrador/reportes.jsp</file>
+            <file>file:/C:/Users/marco.sinto/OneDrive%20-%20Casa%20Medica/Documentos/NetBeansProjects/PROYECTO%20PARTE%203%20PR/proyecto-Marco-Sinto/src/java/reportes/ComprasReport.java</file>
+            <file>file:/C:/Users/marco.sinto/OneDrive%20-%20Casa%20Medica/Documentos/NetBeansProjects/PROYECTO%20PARTE%203%20PR/proyecto-Marco-Sinto/src/java/reportes/GenerarPDFMasculinos.java</file>
         </group>
     </open-files>
 </project-private>

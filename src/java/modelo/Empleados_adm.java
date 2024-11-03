@@ -319,7 +319,88 @@ public class Empleados_adm {
         }
         return tabla;
     }
+// Método para leer empleados masculinos 
+    public DefaultTableModel leerEmpleadosMasculinos() {
+        DefaultTableModel tabla = new DefaultTableModel();
+        PreparedStatement parametro = null;
+        ResultSet consulta = null;
 
+        try {
+            conexionDB = new conexion();
+            conexionDB.abrir_conexion();
+
+String query = "SELECT idEmpleado, nombres, apellidos, direccion, telefono, DPI, fecha_nacimiento, idPuesto, fecha_inicio_labores, fechaingreso, genero " +
+               "FROM empleados " +
+               "WHERE genero = 'M' " +
+               "ORDER BY idEmpleado DESC;";
+            parametro = conexionDB.conectar_db.prepareStatement(query);
+            consulta = parametro.executeQuery();
+
+            String encabezado[] = {"idEmpleado", "nombres", "apellidos", "direccion", "telefono", "DPI", "fecha_nacimiento", "idPuesto", "fecha_inicio_labores", "fechaingreso", "genero"};
+            tabla.setColumnIdentifiers(encabezado);
+            String datos[] = new String[11];
+            while (consulta.next()) {
+                datos[0] = consulta.getString("idEmpleado");
+                datos[1] = consulta.getString("nombres");
+                datos[2] = consulta.getString("apellidos");
+                datos[3] = consulta.getString("direccion");
+                datos[4] = consulta.getString("telefono");
+                datos[5] = consulta.getString("DPI");
+                datos[6] = consulta.getString("fecha_nacimiento");
+                datos[7] = consulta.getString("idPuesto");
+                datos[8] = consulta.getString("fecha_inicio_labores");
+                datos[9] = consulta.getString("fechaingreso");
+                datos[10] = consulta.getString("genero");
+                tabla.addRow(datos);
+            }
+        } catch (SQLException ex) {
+            System.err.println("Error al leer empleados: " + ex.getMessage());
+        } finally {
+            closeResources(consulta, parametro);
+        }
+        return tabla;
+    }
+    // Método para leer empleados femeninos 
+    public DefaultTableModel leerEmpleadosFemeninos() {
+        DefaultTableModel tabla = new DefaultTableModel();
+        PreparedStatement parametro = null;
+        ResultSet consulta = null;
+
+        try {
+            conexionDB = new conexion();
+            conexionDB.abrir_conexion();
+
+String query = "SELECT idEmpleado, nombres, apellidos, direccion, telefono, DPI, fecha_nacimiento, idPuesto, fecha_inicio_labores, fechaingreso, genero " +
+               "FROM empleados " +
+               "WHERE genero = 1 " +
+               "ORDER BY idEmpleado DESC;";
+            parametro = conexionDB.conectar_db.prepareStatement(query);
+            consulta = parametro.executeQuery();
+
+            String encabezado[] = {"idEmpleado", "nombres", "apellidos", "direccion", "telefono", "DPI", "fecha_nacimiento", "idPuesto", "fecha_inicio_labores", "fechaingreso", "genero"};
+            tabla.setColumnIdentifiers(encabezado);
+            String datos[] = new String[11];
+            while (consulta.next()) {
+                datos[0] = consulta.getString("idEmpleado");
+                datos[1] = consulta.getString("nombres");
+                datos[2] = consulta.getString("apellidos");
+                datos[3] = consulta.getString("direccion");
+                datos[4] = consulta.getString("telefono");
+                datos[5] = consulta.getString("DPI");
+                datos[6] = consulta.getString("fecha_nacimiento");
+                datos[7] = consulta.getString("idPuesto");
+                datos[8] = consulta.getString("fecha_inicio_labores");
+                datos[9] = consulta.getString("fechaingreso");
+                datos[10] = consulta.getString("genero");
+                tabla.addRow(datos);
+            }
+        } catch (SQLException ex) {
+            System.err.println("Error al leer empleados: " + ex.getMessage());
+        } finally {
+            closeResources(consulta, parametro);
+        }
+        return tabla;
+    }
     // Método para cerrar conexiones y recursos
     private void closeResources(ResultSet rs, PreparedStatement parametro) {
         try {
