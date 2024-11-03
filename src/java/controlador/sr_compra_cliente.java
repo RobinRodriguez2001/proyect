@@ -7,9 +7,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import modelo.Ventas;
+import modelo.Ventas;
 
 @MultipartConfig
-public class sr_ventas extends HttpServlet {
+public class sr_compra_cliente extends HttpServlet {
      
     Ventas venta = new Ventas();
     
@@ -55,7 +56,7 @@ public class sr_ventas extends HttpServlet {
 
         int idEmpleado;
         try {
-            idEmpleado = Integer.parseInt(request.getParameter("drop_empleado"));
+            idEmpleado = Integer.parseInt(request.getParameter("txt_idEmpleado"));
         } catch (NumberFormatException e) {
             throw new NumberFormatException("Error al convertir ID del empleado.");
         }
@@ -88,29 +89,12 @@ public class sr_ventas extends HttpServlet {
         if (request.getParameter("btn_agregar") != null) {
             int resultado = venta.agregarVenta();
             if (resultado > 0) {
-                response.sendRedirect("ventas.jsp");
+                response.sendRedirect("index.jsp");
             } else {
                 response.getWriter().println("Error al agregar venta o detalles de venta.");
             }
         }
 
-        if (request.getParameter("btn_modificar") != null) {
-            int resultado = venta.modificarVenta();
-            if (resultado > 0) {
-                response.sendRedirect("ventas.jsp");
-            } else {
-                response.getWriter().println("Error al modificar venta o detalles de venta.");
-            }
-        }
-
-        if (request.getParameter("btn_eliminar") != null) {
-            int resultado = venta.eliminarVenta();
-            if (resultado > 0) {
-                response.sendRedirect("ventas.jsp");
-            } else {
-                response.getWriter().println("Error al eliminar venta o detalles de venta.");
-            }
-        }
     } catch (IOException e) {
         response.getWriter().println("Error inesperado: " + e.getMessage());
         e.printStackTrace(response.getWriter());
