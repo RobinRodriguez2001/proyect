@@ -32,7 +32,7 @@ public class sr_clientes_adm extends HttpServlet {
 
             // Acción según el valor del botón presionado
             if (request.getParameter("btn_agregar") != null) {
-                if (cliente.agregarCliente() > 0) {
+                if (cliente.agregarCliente(request) > 0) {
                     response.sendRedirect("clientes.jsp");
                 } else {
                     response.getWriter().println("Error al agregar cliente.");

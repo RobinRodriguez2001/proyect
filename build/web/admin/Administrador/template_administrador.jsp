@@ -133,7 +133,13 @@
             width: 250px;
             height: auto;
         }
-
+        
+        label{
+            background: linear-gradient(to right, red, blue);
+            background-clip: text;
+            color: transparent;
+        }
+        
         .sidebar {
             position: fixed;
             top: 0;
@@ -260,7 +266,7 @@
     <header>
         <div class="menu-icon" onclick="toggleMenu()">&#9776;</div>
         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-            <a class="navbar-brand">
+            <a class="navbar-brand" href="../../index.jsp">
                 <img src="../../img/as.png" alt="Logo" style="width: 150px; height: auto;">
             </a>
             <div class="usuario"><%= usuario.getUsername() %></div>

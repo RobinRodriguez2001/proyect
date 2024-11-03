@@ -55,7 +55,7 @@ public class sr_ventas extends HttpServlet {
 
         int idEmpleado;
         try {
-            idEmpleado = Integer.parseInt(request.getParameter("txt_idEmpleado"));
+            idEmpleado = Integer.parseInt(request.getParameter("drop_empleado"));
         } catch (NumberFormatException e) {
             throw new NumberFormatException("Error al convertir ID del empleado.");
         }

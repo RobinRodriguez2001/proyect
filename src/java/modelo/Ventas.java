@@ -119,48 +119,84 @@ public class Ventas {
     // Métodos para obtener y establecer campos...
     // Agregar aquí getters y setters
 
-    // Método para agregar ventas y detalles de venta
     public int agregarVenta() {
-        int retorno = 0;
-        PreparedStatement parametroVenta = null;
-        PreparedStatement parametroDetalle = null;
+    int retorno = 0;
+    PreparedStatement parametroVenta = null;
+    PreparedStatement parametroDetalle = null;
+    PreparedStatement parametroActualizarCantidad = null;
+    PreparedStatement parametroVerificar = null;
 
-        try {
-            conexionDB = new conexion();
-            conexionDB.abrir_conexion();
+    try {
+        conexionDB = new conexion();
+        conexionDB.abrir_conexion();
 
-            // Insertar en la tabla ventas
-            String queryVenta = "INSERT INTO ventas (nofactura, serie, fechafactura, idcliente, idempleado) VALUES (?, ?, ?, ?, ?);";
-            parametroVenta = conexionDB.conectar_db.prepareStatement(queryVenta, PreparedStatement.RETURN_GENERATED_KEYS);
-            parametroVenta.setInt(1, getNo_factura());
-            parametroVenta.setString(2, getSerie());
-            parametroVenta.setString(3, getFecha_factura());
-            parametroVenta.setInt(4, getIdcliente());
-            parametroVenta.setInt(5, getIdempleado());
-            parametroVenta.executeUpdate();
+        // Insertar en la tabla ventas
+        String queryVenta = "INSERT INTO ventas (nofactura, serie, fechafactura, idcliente, idempleado) VALUES (?, ?, ?, ?, ?);";
+        parametroVenta = conexionDB.conectar_db.prepareStatement(queryVenta, PreparedStatement.RETURN_GENERATED_KEYS);
+        parametroVenta.setInt(1, getNo_factura());
+        parametroVenta.setString(2, getSerie());
+        parametroVenta.setString(3, getFecha_factura());
+        parametroVenta.setInt(4, getIdcliente());
+        parametroVenta.setInt(5, getIdempleado());
+        parametroVenta.executeUpdate();
 
-            // Obtener el idVenta generado
-            ResultSet generatedKeys = parametroVenta.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                idVenta = generatedKeys.getInt(1);
-            }
-
-            // Insertar en la tabla ventas_detalle
-            String queryDetalle = "INSERT INTO ventas_detalle (idventa, idproducto, cantidad, precio_unitario) VALUES (?, ?, ?, ?);";
-            parametroDetalle = conexionDB.conectar_db.prepareStatement(queryDetalle);
-            parametroDetalle.setInt(1, idVenta);
-            parametroDetalle.setInt(2, getIdproducto());
-            parametroDetalle.setInt(3, getCantidad());
-            parametroDetalle.setDouble(4, getPrecio_costo_unitario());
-            retorno = parametroDetalle.executeUpdate();
-
-        } catch (SQLException ex) {
-            System.err.println("Error al agregar venta: " + ex.getMessage());
-        } finally {
-            closeResources(parametroVenta, parametroDetalle);
+        // Obtener el idVenta generado
+        ResultSet generatedKeys = parametroVenta.getGeneratedKeys();
+        if (generatedKeys.next()) {
+            idVenta = generatedKeys.getInt(1);
         }
-        return retorno;
+
+        // Insertar en la tabla ventas_detalle
+        String queryDetalle = "INSERT INTO ventas_detalle (idventa, idproducto, cantidad, precio_unitario) VALUES (?, ?, ?, ?);";
+        parametroDetalle = conexionDB.conectar_db.prepareStatement(queryDetalle);
+        parametroDetalle.setInt(1, idVenta);
+        parametroDetalle.setInt(2, getIdproducto());
+        parametroDetalle.setInt(3, getCantidad());
+        parametroDetalle.setDouble(4, getPrecio_costo_unitario());
+        retorno = parametroDetalle.executeUpdate();
+
+        // Asegúrate de que la cantidad y el idproducto no sean nulos o negativos
+        int cantidad = getCantidad();
+        int idProducto = getIdproducto();
+
+        if (cantidad <= 0 || idProducto <= 0) {
+            System.err.println("Cantidad o ID de producto no válidos");
+            return retorno; // o maneja el error de otra manera
+        }
+
+        // Verificar existencia del producto antes de restar
+        String queryVerificar = "SELECT existencia FROM productos WHERE idProducto = ?;";
+        parametroVerificar = conexionDB.conectar_db.prepareStatement(queryVerificar);
+        parametroVerificar.setInt(1, idProducto);
+        ResultSet rs = parametroVerificar.executeQuery();
+
+        if (rs.next()) {
+            int existenciaActual = rs.getInt("existencia");
+            if (cantidad > existenciaActual) {
+                System.err.println("No hay suficiente existencia para realizar la venta.");
+                return retorno; // o maneja el error de otra manera
+            }
+        } else {
+            System.err.println("Producto no encontrado.");
+            return retorno; // o maneja el error de otra manera
+        }
+
+        // Actualizar la existencia del producto
+        String queryActualizarCantidad = "UPDATE productos SET existencia = existencia + ? WHERE idProducto = ?;";
+        parametroActualizarCantidad = conexionDB.conectar_db.prepareStatement(queryActualizarCantidad);
+        parametroActualizarCantidad.setInt(1, cantidad);
+        parametroActualizarCantidad.setInt(2, idProducto);
+        parametroActualizarCantidad.executeUpdate();
+
+    } catch (SQLException ex) {
+        System.err.println("Error al agregar venta: " + ex.getMessage());
+    } finally {
+        closeResources(parametroVenta, parametroDetalle, parametroActualizarCantidad, parametroVerificar);
     }
+    return retorno;
+}
+
+
 
      // Método para modificar ventas y detalles de venta
     public int modificarVenta() {
@@ -358,6 +394,28 @@ public DefaultTableModel leerVentas_1() {
             conexionDB.cerrar_conexion();
         } catch (SQLException ex) {
             System.out.println("Error drop_cliente: " + ex.getMessage());
+        }
+        return drop;
+    }
+    
+    // Dropdown de clientes
+    public HashMap<String, List<String>> drop_empleado() {
+        HashMap<String, List<String>> drop = new HashMap<>();
+        try {
+            String query = "SELECT idEmpleado, nombres FROM empleados;";
+            conexionDB = new conexion();
+            conexionDB.abrir_conexion();
+            ResultSet consulta = conexionDB.conectar_db.createStatement().executeQuery(query);
+
+            while (consulta.next()) {
+                List<String> valores = new ArrayList<>();
+                valores.add(consulta.getString("nombres"));
+                drop.put(consulta.getString("idEmpleado"), valores);
+            }
+
+            conexionDB.cerrar_conexion();
+        } catch (SQLException ex) {
+            System.out.println("Error drop_empleado: " + ex.getMessage());
         }
         return drop;
     }

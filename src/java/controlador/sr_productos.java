@@ -30,6 +30,7 @@ public class sr_productos extends HttpServlet {
             String descripcion = request.getParameter("txt_descripcion");
             double precioCosto = Double.parseDouble(request.getParameter("txt_precio_costo"));
             int existencia = Integer.parseInt(request.getParameter("txt_existencia"));
+            String imagen = request.getParameter("txt_imagen");
 
             // Crear objeto producto si se está agregando o modificando
             productos producto = new productos(
@@ -37,7 +38,7 @@ public class sr_productos extends HttpServlet {
                     productoNombre,
                     idMarca,
                     descripcion,
-                    null, // Para agregar la imagen más tarde
+                    imagen, // Para agregar la imagen más tarde
                     precioCosto,
                     existencia
             );

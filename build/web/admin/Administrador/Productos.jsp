@@ -16,7 +16,7 @@
         <div class="col-md-6 d-flex flex-column align-items-end">
             <h3>Buscar Producto</h3>
             <div class="text-center">
-                <input type="text" id="buscar_id" name="buscar_id" placeholder="Buscar por ID o nombre" class="form-control d-inline-block" style="width: auto; display: inline;">
+                <input type="text" id="buscar_id" name="buscar_id" placeholder="Buscar por ID" class="form-control d-inline-block" style="width: auto; display: inline;">
                 <button type="button" name="btn_buscar" id="btn_buscar" class="btn btn-primary" data-toggle="modal" data-target="#modal_buscar_producto">Buscar</button>
                 <a href="marcas.jsp" class="btn btn-primary">Tabla Marcas</a>
             </div>
@@ -119,7 +119,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-body">
-                <h5>Lista de Proveedores</h5>     
+                <h5>PRODUCTO</h5>     
                     <table class="table table-striped">
                     <thead>
                         <tr>
@@ -160,6 +160,9 @@
         </div>
     </div>
 </div>     
+                    
+                    
+
                 
         
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

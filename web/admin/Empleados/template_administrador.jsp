@@ -42,7 +42,7 @@
 
     try {
         // Consulta SQL para obtener los menús en orden jerárquico
-        String sql = "SELECT id_menu, nombre, padre_id, url, archivo FROM menu1 ORDER BY padre_id, id_menu";
+        String sql = "SELECT id_menu, nombre, padre_id, url, archivo FROM menu ORDER BY padre_id, id_menu";
         stmt = conn.prepareStatement(sql);
         rs = stmt.executeQuery();
 
@@ -260,7 +260,7 @@
     <header>
         <div class="menu-icon" onclick="toggleMenu()">&#9776;</div>
         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-            <a class="navbar-brand">
+            <a class="navbar-brand" href="../../index.jsp">
                 <img src="../../img/as.png" alt="Logo" style="width: 150px; height: auto;">
             </a>
             <div class="usuario"><%= usuario.getUsername() %></div>
